@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		.css2{
+			height:100px;
+			width:200px;
+			background: #d00
+		}
+		#strSize span{
+			border:1px solid #ccc
+		}
+	</style>
+	<link rel="stylesheet" href="../css/test.css">
+</head>
+<script src="../utils/tool.js"></script>
+<script>
+</script>
+<body>
+	<div id="maopao" class="maopao">
+		<button class="maopao1" data-caozuo="冒泡">冒泡</button>
+		<button class="maopao2" data-caozuo="冒泡">取消冒泡</button>
+	</div>
+	<br>
+	<a href="https://www.cnblogs.com/zhongchao666/">默认事件</a>
+	<a href="https://www.cnblogs.com/zhongchao666/" onclick="cancelDefault(event)">取消默认事件</a>
+	<br>
+	<br>
+	<div id="cancelRight" style="height:100px;width:500px;background: #ccc">
+		取消右键默认菜单
+	</div>
+	<br>
+	<div>滚动条高度:<span id="getScrollTop">0</span>
+	滚动条左侧距离:<span id="getScrollLeft">0</span>
+	</div>
+	<div id="scrollBox" style="height:200px;width:200px;overflow: auto">
+		<div class="scroll" style="height:1000px;width:1000px">
+			
+		</div>
+	</div>
+	<br>
+
+	<div id="cssStyle">
+		获取非行内样式，obj：dom节点，attr：属性名
+		<div class="css1" style='height:100px;width:200px;background: #ccc'>行间样式，行内样式，嵌入式样式</div>
+		<div class="css2">内部样式</div>
+		<div class="css3">外部样式</div>
+	</div>
+	<br>
+
+	<div>删除事件监听器的兼容</div>
+	<ul id="listener">
+			<li>第一行数据</li>
+			<li>第二行数据</li>
+			<li>第三行数据</li>
+	</ul>
+	<div>
+		<button id="deletelisten" onclick="deleteListener(event)">删除事件监听器的兼容</button>
+	</div>
+	<br>
+	
+	<div id="strSize">
+		计算字符串 
+		字节长度(js):<span>0</span>&emsp;
+		字节数(转blob计算):<span>0</span>&emsp;
+		字节数(js计算):<span>0</span>
+	</div>
+	<div>
+		<input id="strSizeValue" type="text" placeholder="输入字符串">
+	</div>
+	<script>
+		var tool = new Tool()
+		window.onload=function(){
+			maopao()
+			cancelRight()
+			scrollEvent()
+			getCssStyle()
+			mouseDomn()
+			listenTest()
+			getKeyCode()
+			getStringSize()
+		}
+
+		// 冒泡测试
+		function maopao(){
+			var maopao = document.getElementById('maopao')
+
+			// 获取对象中class属性值的兼容
+			var maopaoClass = tool.setClassName(maopao)
+			// console.log(maopaoClass,maopao)
+
+			// 获取class节点兼容
+			var maopao1 = tool.byClassName(document,'maopao1')
+			var maopao2 = tool.byClassName(document,'maopao2')
+			// console.log('自定义属性',maopao1[0].getAttribute('data-caozuo'),maopao2[0].getAttribute('data-caozuo'))
+
+			// 父元素事件
+			maopao.onclick = function(){
+				console.log('maopao')
+			}
+			// 子元素有冒泡
+			maopao1[0].onclick = function(){
+				console.log('maopao1')
+			}
+			// 子元素取消冒泡
+			maopao2[0].onclick = function(e){
+				tool.stopPropagation(e)
+				console.log('maopao2')
+			}
+		}
+
+		// 取消浏览器默认事件
+		function cancelDefault(e){
+			tool.preventDefault(e)
+		}
+
+		// 取消右键菜单
+		function cancelRight(){
+			var cancelRight = document.getElementById('cancelRight')
+			tool.oncontextmenu(cancelRight)
+
+		}
+
+		// 滚动条 (defineProperty数据双向绑定)
+		function scrollEvent(){
+			var obj = {
+				top:'0',
+				left:'0'
+			}
+			var scrollBox = document.getElementById('scrollBox')
+			var getScrollTop = document.getElementById('getScrollTop')
+			var getScrollLeft = document.getElementById('getScrollLeft')
+			
+			scrollBox.onscroll = function(){
+				var top = tool.getScrollTop(scrollBox)
+				var left = tool.getScrollLeft(scrollBox)
+				tool.dataBind(obj,getScrollTop,'top',top,'set')
+				tool.dataBind(obj,getScrollLeft,'left',left,'set')
+			}
+		}
+
+		// 获取样式属性
+		function getCssStyle(){
+			var css1 = tool.byClassName(document,'css1')
+			var css2 = tool.byClassName(document,'css2')
+			var css3 = tool.byClassName(document,'css3')
+			console.log('行内样式',css1[0].style.height,'abc', tool.getStyle(css1[0],'height'))
+			console.log('内部样式',css2[0].style.height,'abc', tool.getStyle(css2[0],'height'))
+			console.log('外部样式',css3[0].style.height,'abc', tool.getStyle(css3[0],'height'))
+		}
+		// 鼠标按钮code
+		function mouseDomn(){
+			document.onmousedown=function(evt){
+				tool.getButton(evt)
+			}
+		}
+		
+		// 通过onkeypress(只有字符键支持)获取键盘按键编码值的兼容
+		function getKeyCode(){
+			document.onkeypress = function(e){
+				e = tool.setEvent(e)
+				console.log('键盘编码',tool.getKeyCode(e))
+			}
+		}
+		// 添加事件监听兼容
+		function listenTest(){
+			var listener = document.getElementById('listener')
+			tool.addEventListen(listener,'click',function(e){
+				// 事件委托
+				e = tool.setEvent(e)
+				var target = tool.getTarget(e)
+				target.style.background = '#d00'
+				console.log(target)
+			},true)
+		}
+		
+		// 删除事件监听器的兼容
+		function deleteListener(e) {
+			var listener = document.getElementById('listener')
+			tool.removeEventListen(listener,'click',function(){
+				console.log('删除事件监听器的兼容')
+			},true)
+		}
+		// 计算字符串 字节长度 字节数
+		function getStringSize(){
+			var obj={
+				length:0,
+				size1:0,
+				size2:0
+			}
+			var strSizeValue = document.getElementById('strSizeValue')
+			var strSize = document.getElementById('strSize')
+			var lengthDom = strSize.getElementsByTagName('span')[0]
+			var sizeDom1 = strSize.getElementsByTagName('span')[1]
+			var sizeDom2 = strSize.getElementsByTagName('span')[2]
+			strSizeValue.oninput = function(){
+				var length = tool.byteLength
+				(strSizeValue.value)
+				var size1 = tool.sizeofBlob
+				(strSizeValue.value)
+				var size2 = tool.sizeofBlob
+				(strSizeValue.value)
+				tool.dataBind(obj,lengthDom,'length',length,'set')
+				tool.dataBind(obj,sizeDom1,'size1',size1,'set')
+				tool.dataBind(obj,sizeDom2,'size2',size2,'set')
+			}
+			// tool.dataBind(obj,lengthDom,'top',top,'set')
+		}
+	</script>
+</body>
+</html>
