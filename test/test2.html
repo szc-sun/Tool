@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    #test2{
+      height:500px;
+      width:500px;
+      background:pink 
+    }
+    #ele span{
+      background: #ccc
+    }
+  </style>
+  <script src="../js/jquery-2.1.1.min.js"></script>
+</head>
+<body>
+  <div id="test2">
+
+  </div>
+  <button class="add">添加appendChild</button>
+  <button class="del">移除removeChild</button>
+  <button class="replace">替换replaceChild</button>
+  <button class="insert">插入insertBefore</button>
+
+  <script>
+    var Test2 = document.getElementById('test2')
+    console.log(Test2 === $('#test2')[0],$(Test2) , $('#test2'),$('.add'))
+    $(function(){
+      $('.add').each(function(i){
+        $(this).on('click',create)
+      })
+      $('.del').on('click',del)
+      $('.replace').on('click',replace)
+      $('.insert').on('click',insert)
+    })
+    // createDocumentFragment
+    // createdocumentfragment()方法创建了一虚拟的节点对象，节点对象包含所有属性和方法。
+    // 当你想提取文档的一部分，改变，增加，或删除某些内容及插入到文档末尾可以使用createDocumentFragment() 方法。
+    // 你也可以使用文档的文档对象来执行这些变化，但要防止文件结构被破坏，createDocumentFragment() 方法可以更安全改变文档的结构及节点。
+
+    // createTextNode() 可创建文本节点。
+    // createElement() 方法通过指定名称创建一个元素
+    function create(){
+      var ele = `
+        <div id="ele">
+          <span>123</span>
+          <span>456</span>  
+        </div>
+      `
+      var a = document.createDocumentFragment()
+      var b = document.createElement('div')
+      var c = document.createElement('div')
+      var Text = document.createTextNode("Hello World");
+      c.appendChild(Text)
+      b.id = 'div1'
+      c.id = 'div2'
+      b.innerHTML = ele
+      a.appendChild(b)
+      console.log(a,c)
+      Test2.appendChild(a)
+      Test2.appendChild(c)
+    }
+    // 移除removeChild
+    function del(){
+      var div1 = document.getElementById('div1')
+      Test2.removeChild(div1)
+    }
+    // 替换replaceChild
+    function replace(){
+      var a = document.createElement('div')
+      a.innerHTML = '2333'
+      var div1 = document.getElementById('div1')
+      console.log(a,div1)
+      Test2.replaceChild(a,div1)
+    }
+    // 插入insertBefore 方法可在已有的子节点前插入一个新的子节点。
+    function insert(){
+      var a = document.createElement('div')
+      a.innerHTML = new Date().getTime()
+      var div1 = document.getElementById('div1')
+      Test2.insertBefore(a,div1)
+    }
+  </script>
+</body>
+</html>

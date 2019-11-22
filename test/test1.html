@@ -14,7 +14,10 @@
 		}
 	</style>
 	<link rel="stylesheet" href="../css/test.css">
+	<!-- <script src="../utils/jquery-2.1.1.min.js"></script> -->
 </head>
+<script src="../js/require.js"></script>
+<script src="../js/config.js"></script>
 <script src="../utils/tool.js"></script>
 <script>
 </script>
@@ -70,6 +73,15 @@
 	<div>
 		<input id="strSizeValue" type="text" placeholder="输入字符串">
 	</div>
+	<br>
+	<div>
+		解析URL成一个对象:
+		<span id="showUrlData"></span>
+	</div>
+	<div>
+		<textarea id="getUrl" rows="5" type="text" placeholder="输入网址"></textarea>
+		<input id="getUrlBtn" type="button" value="解析">
+	</div>
 	<script>
 		var tool = new Tool()
 		window.onload=function(){
@@ -81,6 +93,7 @@
 			listenTest()
 			getKeyCode()
 			getStringSize()
+			getUrlQuery()
 		}
 
 		// 冒泡测试
@@ -183,6 +196,7 @@
 				console.log('删除事件监听器的兼容')
 			},true)
 		}
+		
 		// 计算字符串 字节长度 字节数
 		function getStringSize(){
 			var obj={
@@ -207,6 +221,39 @@
 				tool.dataBind(obj,sizeDom2,'size2',size2,'set')
 			}
 			// tool.dataBind(obj,lengthDom,'top',top,'set')
+		}
+		
+		// 解析URL成一个对象
+		function getUrlQuery(){
+			var getUrl = document.getElementById('getUrl')
+			var getUrlBtn = document.getElementById('getUrlBtn')
+			var showUrlData = document.getElementById('showUrlData')
+			var obj = {
+				str:''
+			}
+			getUrlBtn.onclick = function(){
+				var url = getUrl.value
+				var urlData = tool.urlQueryString(url)
+				var urlDataStr = JSON.stringify(tool.urlQueryString(url),function(key,value){
+					for(key in value){
+						if(value[key] === undefined){
+							value[key] = 'undefined'
+						}
+					}
+					// console.log(123,key,value)
+					return value
+				})
+				// console.log(JSON.parse(urlDataStr,function(key,value){
+				// 	for(key in value){
+				// 		if(value[key] === 'undefined'){
+				// 			value[key] = undefined
+				// 		}
+				// 	}
+				// 	console.log(123,key,value)
+				// 	return value
+				// }))
+				tool.dataBind(obj,showUrlData,'str',urlDataStr,'set')
+			}
 		}
 	</script>
 </body>
