@@ -223,6 +223,26 @@ function Tool(name){
 		})
 		return this.url
 	}
+	// 19、弹窗
+	this.dialog = function(){
+		var that = this
+		if(!this.dialog.instance){
+			this.dialog.instance = {
+				ele: document.createElement('div'),
+				init: function(obj){
+					var str = obj.html
+					this.ele.innerHTML = str
+					document.body.appendChild(this.ele);
+					this.ele.style.cssText = obj.css;
+					
+				},
+				hide: function(){
+					this.ele.parentNode.removeChild(this.ele)
+				}
+			}
+		}
+		return this.dialog.instance;
+	}
 }
 // 原型方法
 Tool.prototype.getName = function(){

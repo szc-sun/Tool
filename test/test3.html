@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <script src="../utils/tool.js"></script>
+</head>
+<body>
+  <div>
+    <button id="btn1">弹窗</button>
+    <button id="btn2">弹窗</button>
+  </div>
+  <script>
+    var tool = new Tool()
+    window.onload = function(){
+      showDialog()
+    }
+    function showDialog(){
+      var btn1 = document.getElementById('btn1')
+      var btn2 = document.getElementById('btn2')
+      btn1.onclick = function(){
+        tool.dialog().init(
+          {
+            css:' width : 100px;height : 100px; background : pink;position : absolute;left : 300px',
+            html:`
+                <div id="dialogHeader">
+                <span class="haderText">头部</span>
+                <span class = "hide" style="float:right;cursor:pointer">X</span>
+                </div>
+                <div id ="dialogBody">
+                  内容
+                </div>
+                <div id="dialogFooter">
+                  尾部
+                </div>`
+          }
+        )
+        var hide = tool.byClassName(document,'hide')
+					hide[0].onclick = (function(){
+						tool.dialog().hide()
+					})
+      }
+      btn2.onclick = function(){
+        tool.dialog().hide()
+      }
+    }
+  </script>
+</body>
+</html>
