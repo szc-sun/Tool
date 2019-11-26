@@ -85,5 +85,24 @@
       Test2.insertBefore(a,div1)
     }
   </script>
+   <input type="text" value="123" id="test01">
+   <input type="button" value="测试" id="test02" onclick="test_()">
+   <script>
+    //  $(function(){
+        
+    //  })
+     function test_() {
+          //将原生的js转换为jquery的js--只需要在外围加上 $
+          var test=document.getElementById("test01").value;
+          var testJquery=$(document.getElementById("test01")).val();
+          //alert(testJquery);
+          //将jquery的js转换为原生的js，是加上get(0)
+          var jqueryTest=$("#test01").val();
+          var testJs=$("#test01").get(0).value;
+          console.log(testJs);
+          console.log($('#test01,#test02'))
+        }
+      
+    </script>
 </body>
 </html>
